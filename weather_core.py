@@ -58,23 +58,10 @@ Time zone: UTC {zone}
     return report
 
 
-def analyse_weather(raw_data, day, details):
+def analyse_weather(raw_data, day):
     raw_data = raw_data["consolidated_weather"][day]
     forecast = DailyWeather(raw_data["applicable_date"], raw_data["weather_state_name"], raw_data["the_temp"],
                             raw_data["wind_speed"] * 1.609344, raw_data["wind_direction_compass"],
                             raw_data["air_pressure"], raw_data["humidity"], raw_data["visibility"] * 1.609344,
                             raw_data["predictability"])
-    report = f'''
-Forecast for: {forecast.date}
-Weather state: {forecast.state}
-Temperature: {forecast.temp:.1f}°C
-Wind: {forecast.wind_speed:.2f} {forecast.wind_dir} [km/h]'''
-
-    if details:
-        report += f'''
-Air pressure: {forecast.pressure}mbar
-Humidity: {forecast.humidity}%
-Visibility: {forecast.visibility:.1f}km
-Predictability: {forecast.predictability}%
-'''
-    return report
+    return forecast
