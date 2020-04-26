@@ -33,6 +33,32 @@ Chosen city: {city}
 Current date: {date}
 Current time: {lt_time}LT, {utc_time}UTC
 Time zone: UTC {zone}
+'''
+    return report
 
+
+def analyse_weather(raw_data, day, details):
+    raw_data = raw_data["consolidated_weather"][day]
+    date = raw_data["applicable_date"]
+    state = raw_data["weather_state_name"]
+    temp = float(raw_data["the_temp"])
+    wind_speed = float(raw_data["wind_speed"]) * 1.609344
+    wind_dir = raw_data["wind_direction_compass"]
+    pressure = raw_data["air_pressure"]
+    humidity = raw_data["humidity"]
+    visibility = raw_data["visibility"] * 1.609344
+    predictability = raw_data["predictability"]
+    report = f'''
+Forecast for: {date}
+Weather state: {state}
+Temperature: {temp:.1f}°C
+Wind: {wind_speed:.2f} {wind_dir} [km/h]'''
+
+    if details:
+        report += f'''
+Air pressure: {pressure}mbar
+Humidity: {humidity}%
+Visibility: {visibility:.1f}km
+Predictability: {predictability}%
 '''
     return report

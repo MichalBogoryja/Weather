@@ -9,6 +9,13 @@ def forecast_range_check(days, max_days):
     return days
 
 
+def present_weather_daily(data, days, detail):
+    report = ''
+    for day in range(days):
+        report += analyse_weather(data, day, detail)
+    return report
+
+
 my_parser = argparse.ArgumentParser(prog='weather_cli',
                                     usage='%(prog)s [city name]',
                                     description='Shows the weather forecast in the desired city',
@@ -28,6 +35,10 @@ my_parser.add_argument('-Range',
                        default=3,
                        help='The range of the requested forecast')
 
+my_parser.add_argument('-Detailed',
+                       action="store_false",
+                       help='''The level of the forecast's details can be adjusted [True/False]''')
+
 my_parser.add_argument('-ver',
                        action='version')
 
@@ -35,6 +46,7 @@ args = my_parser.parse_args()
 
 city = args.City
 forecast_range = args.Range
+details = args.Detailed
 
 city_id = get_location_id(city)
 
@@ -46,3 +58,4 @@ forecast_data = outline_forecast_main_data(weather_data)
 
 print(forecast_data)
 
+print(present_weather_daily(weather_data, forecast_range, details))
