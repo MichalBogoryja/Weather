@@ -1,6 +1,26 @@
 import json
 import requests
 
+from dataclasses import dataclass
+
+
+@dataclass()
+class Weather:
+    description: str
+    value: str
+
+
+@dataclass()
+class DailyWeather:
+    date: str
+    state: str
+    temp: float
+    wind_speed: float
+    wind_dir: str
+    pressure: str
+    humidity: str
+    visibility: float
+    predictability: float
 
 def get_location_id(city):
     response = requests.get(f'https://www.metaweather.com/api/location/search/?query={city}')
@@ -27,9 +47,10 @@ def outline_forecast_main_data(raw_data):
     zone = raw_data["time"][-6:]
     utc_time = str(int(raw_data["time"][11:13]) - int(zone[:3])) + raw_data["time"][13:19]
     city = raw_data["title"].upper()
+    city = Weather('Chosen city: ', raw_data["title"].upper())
 
     report = f'''
-Chosen city: {city} 
+{city.description}{city.value} 
 Current date: {date}
 Current time: {lt_time}LT, {utc_time}UTC
 Time zone: UTC {zone}
@@ -39,26 +60,21 @@ Time zone: UTC {zone}
 
 def analyse_weather(raw_data, day, details):
     raw_data = raw_data["consolidated_weather"][day]
-    date = raw_data["applicable_date"]
-    state = raw_data["weather_state_name"]
-    temp = float(raw_data["the_temp"])
-    wind_speed = float(raw_data["wind_speed"]) * 1.609344
-    wind_dir = raw_data["wind_direction_compass"]
-    pressure = raw_data["air_pressure"]
-    humidity = raw_data["humidity"]
-    visibility = raw_data["visibility"] * 1.609344
-    predictability = raw_data["predictability"]
+    forecast = DailyWeather(raw_data["applicable_date"], raw_data["weather_state_name"], raw_data["the_temp"],
+                            raw_data["wind_speed"] * 1.609344, raw_data["wind_direction_compass"],
+                            raw_data["air_pressure"], raw_data["humidity"], raw_data["visibility"] * 1.609344,
+                            raw_data["predictability"])
     report = f'''
-Forecast for: {date}
-Weather state: {state}
-Temperature: {temp:.1f}°C
-Wind: {wind_speed:.2f} {wind_dir} [km/h]'''
+Forecast for: {forecast.date}
+Weather state: {forecast.state}
+Temperature: {forecast.temp:.1f}°C
+Wind: {forecast.wind_speed:.2f} {forecast.wind_dir} [km/h]'''
 
     if details:
         report += f'''
-Air pressure: {pressure}mbar
-Humidity: {humidity}%
-Visibility: {visibility:.1f}km
-Predictability: {predictability}%
+Air pressure: {forecast.pressure}mbar
+Humidity: {forecast.humidity}%
+Visibility: {forecast.visibility:.1f}km
+Predictability: {forecast.predictability}%
 '''
     return report
