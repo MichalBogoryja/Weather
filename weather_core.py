@@ -21,6 +21,8 @@ class DailyWeather:
     humidity: str
     visibility: float
     predictability: float
+    state_abbr: str
+
 
 def get_location_id(city):
     response = requests.get(f'https://www.metaweather.com/api/location/search/?query={city}')
@@ -63,23 +65,23 @@ def analyse_weather(raw_data, day):
     forecast = DailyWeather(raw_data["applicable_date"], raw_data["weather_state_name"], raw_data["the_temp"],
                             raw_data["wind_speed"] * 1.609344, raw_data["wind_direction_compass"],
                             raw_data["air_pressure"], raw_data["humidity"], raw_data["visibility"] * 1.609344,
-                            raw_data["predictability"])
+                            raw_data["predictability"], raw_data["weather_state_abbr"])
     return forecast
 
 
 def present_weather_daily(data, day, detail):
     forecast_daily = analyse_weather(data, day)
     report = f'''
-Forecast for: {forecast_daily.date}
-Weather state: {forecast_daily.state}
-Temperature: {forecast_daily.temp:.1f}°C
-Wind: {forecast_daily.wind_speed:.2f} {forecast_daily.wind_dir} [km/h]'''
+{'Forecast for:':>15} {forecast_daily.date}
+{'Weather state:':>15} {forecast_daily.state}
+{'Temperature:':>15} {forecast_daily.temp:.1f}°C
+{'Wind:':>15} {forecast_daily.wind_speed:.2f} {forecast_daily.wind_dir} [km/h]'''
 
     if detail:
         report += f'''
-Air pressure: {forecast_daily.pressure}mbar
-Humidity: {forecast_daily.humidity}%
-Visibility: {forecast_daily.visibility:.1f}km
-Predictability: {forecast_daily.predictability}%'''
+{'Air pressure:':>15} {forecast_daily.pressure}mbar
+{'Humidity:':>15} {forecast_daily.humidity}%
+{'Visibility:':>15} {forecast_daily.visibility:.1f}km
+{'Predictability:':>15} {forecast_daily.predictability}%'''
 
     return report
