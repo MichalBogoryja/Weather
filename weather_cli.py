@@ -1,5 +1,5 @@
 import argparse
-from weather_core import get_location_id, get_weather, outline_forecast_main_data, analyse_weather
+from weather_core import get_location_id, get_weather, outline_forecast_main_data, analyse_weather, present_weather_daily
 
 
 def forecast_range_check(days, max_days):
@@ -7,27 +7,6 @@ def forecast_range_check(days, max_days):
         days = max_days
         print(f'The maximum forecast range is {max_days}')
     return days
-
-
-def present_weather_daily(data, days, detail):
-    report = ''
-    for day in range(days):
-        forecast_daily = analyse_weather(data, day)
-        report += f'''
-
-Forecast for: {forecast_daily.date}
-Weather state: {forecast_daily.state}
-Temperature: {forecast_daily.temp:.1f}°C
-Wind: {forecast_daily.wind_speed:.2f} {forecast_daily.wind_dir} [km/h]'''
-
-        if detail:
-            report += f'''
-Air pressure: {forecast_daily.pressure}mbar
-Humidity: {forecast_daily.humidity}%
-Visibility: {forecast_daily.visibility:.1f}km
-Predictability: {forecast_daily.predictability}%'''
-
-    return report
 
 
 my_parser = argparse.ArgumentParser(prog='weather_cli',
@@ -71,4 +50,5 @@ forecast_data = outline_forecast_main_data(weather_data)
 
 print(forecast_data)
 
-print(present_weather_daily(weather_data, forecast_range, details))
+for i in range(forecast_range):
+    print(present_weather_daily(weather_data, i, details))

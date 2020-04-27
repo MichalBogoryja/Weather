@@ -65,3 +65,21 @@ def analyse_weather(raw_data, day):
                             raw_data["air_pressure"], raw_data["humidity"], raw_data["visibility"] * 1.609344,
                             raw_data["predictability"])
     return forecast
+
+
+def present_weather_daily(data, day, detail):
+    forecast_daily = analyse_weather(data, day)
+    report = f'''
+Forecast for: {forecast_daily.date}
+Weather state: {forecast_daily.state}
+Temperature: {forecast_daily.temp:.1f}°C
+Wind: {forecast_daily.wind_speed:.2f} {forecast_daily.wind_dir} [km/h]'''
+
+    if detail:
+        report += f'''
+Air pressure: {forecast_daily.pressure}mbar
+Humidity: {forecast_daily.humidity}%
+Visibility: {forecast_daily.visibility:.1f}km
+Predictability: {forecast_daily.predictability}%'''
+
+    return report
