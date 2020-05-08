@@ -17,14 +17,18 @@ Weather is a basic Python app for getting weather forecasts for the desired city
 
 ```
 weather_cli -h
-usage: weather_cli [city name]                                           Shows the weather forecast in the desired city  
+usage: 
+weather_cli [city name]  Shows the weather forecast in the desired city  
 
-positional arguments:                                                    Name of the city     Name of the city for the weather forecast         
+positional arguments:                                                    
+Name of the city     Name of the city for the weather forecast         
 
-optional arguments:                                                     -h, --help           show this help message and exit                   
+optional arguments:                                                     
+-h, --help           Show this help message and exit                   
 -Range   			 The range of the requested forecast   
--Detailed            The level of the forecast's details can be adjusted
--ver                 show program's version number and exit                                                                                     Enjoy!  
+-Detailed            The level of the forecast's details can be adjusted. If this 							 argument is not provided than the level of details is high
+-Imperial			 Units can be changed, metric or imperial. If this argument is not 						 provided than units are metric
+-ver                 Show program's version number and exit                                                                                     Enjoy!  
 ```
 
 ### GUI
@@ -33,5 +37,6 @@ optional arguments:                                                     -h, --he
    - Name of the city (default == 'Warsaw')
    - Length of the forecast (default == 3)
 2. Check radio-button corresponding desired level detail (default == 'no details')
-3. Press 'Show forecast' 
+3. Check radio-button corresponding desired units (default == 'metric')
+4. Press 'Show forecast' 
 
