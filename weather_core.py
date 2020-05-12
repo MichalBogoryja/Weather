@@ -75,8 +75,7 @@ def present_outline_weather(raw_data):
 {'Chosen city:':>13} {forecast_outline.city}
 {'Current date:':>13} {forecast_outline.date}
 {'Current time:':>13} {forecast_outline.time}LT, {forecast_outline.time_utc}UTC
-{'Time zone:':>13} UTC {forecast_outline.time_zone}
-'''
+{'Time zone:':>13} UTC {forecast_outline.time_zone}'''
 
     return report
 

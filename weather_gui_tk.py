@@ -1,6 +1,7 @@
 import tkinter as tk
 from weather_core import get_location_id, get_weather, \
-    get_weather_states_icons, present_weather_daily, analyse_weather
+    get_weather_states_icons, present_weather_daily, analyse_weather, \
+    present_outline_weather
 
 result_label = []
 img = []
@@ -33,22 +34,39 @@ def present_weather(data):
         units = False
     else:
         units = True
-    for day in range(forecast_range):
-        text = present_weather_daily(weather_data, day, detailed, units)
-        print(text)
-        result_label.append(tk.Label(master=window, text=text))
-        result_label[day].grid(row=1, column=day+1)
-        show_image(day, weather_data)
+
+    print(outline_weather(weather_data))
+
+    daily_weather(forecast_range, weather_data, detailed, units)
+
     btn_no_details.select()
     btn_metric.select()
 
     return result_label
 
 
+def daily_weather(forecast_range, data, detail, units):
+    for day in range(forecast_range):
+        text = present_weather_daily(data, day, detail, units)
+        print(text)
+        result_label.append(tk.Label(master=window, text=text))
+        result_label[day+1].grid(row=1, column=day+2)
+        show_image(day, data)
+
+
+def outline_weather(data):
+    global result_label
+    forecast_data = present_outline_weather(data)
+    result_label.append(tk.Label(master=window, text=forecast_data))
+    result_label[0].grid(row=1, column=1)
+    return forecast_data
+
+
 def clear():
     global result_label, img, canvas
     for i in range(len(result_label)):
         result_label[i].destroy()
+    for i in range(len(canvas)):
         canvas[i].destroy()
     result_label = []
     img = []
@@ -62,7 +80,7 @@ def show_image(col, data):
     weather_state = weather_data.state_abbr
     img_dir = get_weather_states_icons(weather_state)
     canvas.append(tk.Canvas(master=window, width=100, height=80, bg="#ADD8E6"))
-    canvas[len(canvas)-1].grid(row=0, column=col+1, stick="nsew")
+    canvas[len(canvas)-1].grid(row=0, column=col+2, stick="nsew")
     img.append(tk.PhotoImage(file=f'{img_dir}/{weather_state}.jpg'))
     canvas[len(canvas)-1].create_image(64, 45, image=img[col])
     pass

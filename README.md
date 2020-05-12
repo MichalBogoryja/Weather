@@ -26,8 +26,8 @@ Name of the city     Name of the city for the weather forecast
 optional arguments:                                                     
 -h, --help           Show this help message and exit                   
 -Range   			 The range of the requested forecast   
--Detailed            The level of the forecast's details can be adjusted. If this 							 argument is not provided than the level of details is high
--Imperial			 Units can be changed, metric or imperial. If this argument is not 						 provided than units are metric
+-Detailed            The level of the forecast's details can be adjusted. If this argument is not provided than the level of details is high
+-Imperial			 Units can be changed, metric or imperial. If this argument is not provided than units are metric
 -ver                 Show program's version number and exit                                                                                     Enjoy!  
 ```
 
