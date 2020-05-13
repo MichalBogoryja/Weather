@@ -2,20 +2,21 @@ import json
 import requests
 import os
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass()
 class OutlineWeather:
     city: str
-    date: str
-    time: str
-    time_utc: str
-    time_zone: str
+    date: datetime.date
+    time: datetime.time
+    time_utc: datetime.time
+    time_zone: datetime.timetz
 
 
 @dataclass()
 class DailyWeather:
-    date: str
+    date: datetime.date
     state: str
     temp: float
     wind_speed: float
@@ -57,14 +58,14 @@ def get_weather_states_icons(name):
 
 
 def outline_forecast_main_data(raw_data):
-    zone = raw_data["time"][-6:]
-    utc_time = str(int(raw_data["time"][11:13]) - int(zone[:3])) \
-        + raw_data["time"][13:19]
+    datetime_str = raw_data["time"][:19] + raw_data["time"][-6:]
+    datetime_object = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S%z')
+    utc_datetime = datetime_object.replace(hour=datetime.utcnow().hour)
     forecast_outline = OutlineWeather(raw_data["title"].upper(),
-                                      raw_data["time"][:10],
-                                      raw_data["time"][11:19],
-                                      utc_time,
-                                      zone)
+                                      datetime_object.date(),
+                                      datetime_object.time(),
+                                      utc_datetime.time(),
+                                      datetime_object.tzinfo)
 
     return forecast_outline
 
@@ -75,14 +76,15 @@ def present_outline_weather(raw_data):
 {'Chosen city:':>13} {forecast_outline.city}
 {'Current date:':>13} {forecast_outline.date}
 {'Current time:':>13} {forecast_outline.time}LT, {forecast_outline.time_utc}UTC
-{'Time zone:':>13} UTC {forecast_outline.time_zone}'''
+{'Time zone:':>13} {forecast_outline.time_zone}'''
 
     return report
 
 
 def analyse_weather(raw_data, day):
     raw_data = raw_data["consolidated_weather"][day]
-    forecast = DailyWeather(raw_data["applicable_date"],
+    date = datetime.strptime(raw_data["applicable_date"], '%Y-%m-%d')
+    forecast = DailyWeather(date.date(),
                             raw_data["weather_state_name"],
                             raw_data["the_temp"],
                             raw_data["wind_speed"],
